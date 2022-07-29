@@ -98,7 +98,7 @@ export default function ProdukKeranjang() {
                 console.log('success save transaction')
                 setModalVisible(false)
                 dispatch(cartCleanAction())
-                navigate('/#/produk')
+                navigate('/produk')
               })
               .catch({})
           }}

@@ -2,57 +2,42 @@ import {
   CButton,
   CCard,
   CCardBody,
-  CCardHeader,
-  CCol,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CForm,
   CFormInput,
-  CFormLabel,
-  CRow,
   CModal,
   CModalBody,
   CModalHeader,
   CModalTitle,
   CModalFooter,
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
+  CFormLabel,
 } from '@coreui/react'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { MenuService } from 'src/utils/services/menu.service'
-import { ProductCategoryService } from 'src/utils/services/productcategory.service'
+import { KasirService } from 'src/utils/services/kasir.service'
 
-export default function OwnerProdukEdit() {
-  const [selectedCategory, setSelectedCategory] = React.useState(0)
-  const [productCategory, setProductCategory] = React.useState([])
+export default function OwnerProductCategoryEdit() {
   const [name, setName] = React.useState('')
-  const [price, setPrice] = React.useState(0)
+  const [username, setusername] = React.useState('')
+  const [password, setpassword] = React.useState('')
   const [modalVisible, setModalVisible] = React.useState(false)
+  const [role, setRole] = React.useState('kasir')
 
   const auth = useSelector((state) => state.AuthReducers)
   const navigate = useNavigate()
   const param = useParams()
 
   React.useEffect(() => {
-    ProductCategoryService()
-      .getMenu(auth.token)
-      .then((data) => {
-        console.log(data.data)
-        setProductCategory(data.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-
-    MenuService()
-      .detailMenu(param.id, auth.token)
+    KasirService()
+      .detailKasir(param.id, auth.token)
       .then((response) => {
-        console.log(response.data)
         setName(response.data.name)
-        setPrice(response.data.price)
-        setSelectedCategory(response.data.category.id)
+        setusername(response.data.username)
+        setRole(response.data.role)
       })
   }, [auth.token, param.id])
 
@@ -69,10 +54,10 @@ export default function OwnerProdukEdit() {
           color="danger"
           className="text-white"
           onClick={() => {
-            MenuService()
-              .deleteMenu(param.id, auth.token)
+            KasirService()
+              .deleteKasir(param.id, auth.token)
               .then((response) => {
-                navigate('/owner/produk')
+                navigate('/owner/kasir')
               })
               .catch((error) => {
                 console.log(error)
@@ -83,10 +68,10 @@ export default function OwnerProdukEdit() {
         </CButton>
         <CButton
           color="secondary"
+          variant="outline"
           onClick={() => {
             setModalVisible(false)
           }}
-          variant="outline"
         >
           Batal
         </CButton>
@@ -100,26 +85,27 @@ export default function OwnerProdukEdit() {
       return
     }
 
-    if (price === 0) {
+    if (username.length === 0) {
       return
     }
 
-    if (selectedCategory === 0) {
+    if (password.length === 0) {
       return
     }
 
     const request = {
       name: name,
-      price: parseInt(price),
-      categoryId: selectedCategory,
+      username: username,
+      password: password,
+      role: role,
     }
 
     console.log(request)
 
-    MenuService()
-      .updateMenu(param.id, request, auth.token)
+    KasirService()
+      .updateKasir(param.id, request, auth.token)
       .then((response) => {
-        navigate('/owner/produk')
+        navigate('/owner/kasir')
       })
       .catch((error) => {})
   }
@@ -127,53 +113,62 @@ export default function OwnerProdukEdit() {
   return (
     <div>
       <div className="d-flex justify-content-between mb-4">
-        <h3>Ubah menu/produk</h3>
+        <h3>Tambah kasir</h3>
       </div>
       <CCard>
         <CCardBody>
           <CForm>
             <CFormInput
               type="text"
-              placeholder="Cth: Nasi Goreng"
-              label="Nama produk/menu"
+              label="Nama"
               className="mb-4"
               value={name}
+              invalid={name.length === 0}
               onChange={(event) => {
                 setName(event.target.value)
               }}
             />
             <CFormInput
-              type="number"
-              placeholder="Cth: 10000"
-              label="Harga"
+              type="text"
+              label="Username"
               className="mb-4"
-              value={price}
+              value={username}
+              invalid={username.length === 0}
               onChange={(event) => {
-                setPrice(event.target.value)
+                setusername(event.target.value)
+              }}
+            />
+            <CFormInput
+              type="password"
+              label="Password"
+              className="mb-4"
+              value={password}
+              invalid={password.length === 0}
+              onChange={(event) => {
+                setpassword(event.target.value)
               }}
             />
             <CFormLabel className="mr-4">Kategori</CFormLabel>
             <br />
-            <CDropdown className="flex-fill">
-              <CDropdownToggle
-                color={selectedCategory === 0 ? 'success' : 'white'}
-                className={selectedCategory === 0 ? 'text-white' : undefined}
-              >
-                {selectedCategory !== 0 && productCategory.length > 0
-                  ? productCategory.find((item) => item.id === selectedCategory).name
-                  : 'Pilih kategori'}
+            <CDropdown className="flex-fill mb-4">
+              <CDropdownToggle color="secondary">
+                {role === 'owner' ? 'Pemilik' : 'Kasir'}
               </CDropdownToggle>
               <CDropdownMenu>
-                {productCategory.map((item, index) => (
-                  <CDropdownItem
-                    key={index}
-                    onClick={() => {
-                      setSelectedCategory(item.id)
-                    }}
-                  >
-                    {item.name}
-                  </CDropdownItem>
-                ))}
+                <CDropdownItem
+                  onClick={() => {
+                    setRole('owner')
+                  }}
+                >
+                  Pemilik warung
+                </CDropdownItem>
+                <CDropdownItem
+                  onClick={() => {
+                    setRole('kasir')
+                  }}
+                >
+                  Kasir
+                </CDropdownItem>
               </CDropdownMenu>
             </CDropdown>
           </CForm>

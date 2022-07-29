@@ -57,7 +57,13 @@ export default function OwnerProductCategoryEdit() {
         >
           Ya
         </CButton>
-        <CButton color="secondary" className="text-white" onClick={() => {}}>
+        <CButton
+          color="secondary"
+          variant="outline"
+          onClick={() => {
+            setModalVisible(false)
+          }}
+        >
           Batal
         </CButton>
       </CModalFooter>
