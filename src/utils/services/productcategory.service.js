@@ -1,8 +1,8 @@
 import { EXT_API } from './constants'
 
-export const MenuService = () => {
+export const ProductCategoryService = () => {
   const getMenu = async (token) => {
-    return fetch(`${EXT_API}/products`, {
+    return fetch(`${EXT_API}/product_category`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -16,7 +16,7 @@ export const MenuService = () => {
   }
 
   const addMenu = async (values, token) => {
-    return fetch(`${EXT_API}/products`, {
+    return fetch(`${EXT_API}/product_category`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
       body: JSON.stringify(values),
@@ -24,7 +24,7 @@ export const MenuService = () => {
   }
 
   const detailMenu = async (id, token) => {
-    return fetch(`${EXT_API}/products/${id}`, {
+    return fetch(`${EXT_API}/product_category/${id}`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -34,7 +34,7 @@ export const MenuService = () => {
   }
 
   const updateMenu = async (id, values, token) => {
-    return fetch(`${EXT_API}/products/${id}`, {
+    return fetch(`${EXT_API}/product_category/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
       body: JSON.stringify(values),
@@ -42,7 +42,7 @@ export const MenuService = () => {
   }
 
   const deleteMenu = async (id, token) => {
-    return fetch(`${EXT_API}/products/${id}`, {
+    return fetch(`${EXT_API}/product_category/${id}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
     }).then((res) => res.json())

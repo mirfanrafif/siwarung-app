@@ -21,14 +21,17 @@ import {
 import currency from 'currency.js'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setKeranjangAction } from 'src/utils/redux/actions/menuactions'
+import { useNavigate } from 'react-router-dom'
+import { cartCleanAction, setKeranjangAction } from 'src/utils/redux/actions/menuactions'
 import { TransactionService } from 'src/utils/services/transactions.service'
 
 export default function ProdukKeranjang() {
   const keranjang = useSelector((state) => state.keranjangReducer)
+  const auth = useSelector((state) => state.AuthReducers)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
   const [jumlahBayar, setJumlahBayar] = React.useState(0)
+  const navigate = useNavigate()
 
   const renderModal = () => (
     <CModal visible={modalVisible} onClose={() => setModalVisible(false)} alignment="center">
@@ -51,7 +54,12 @@ export default function ProdukKeranjang() {
             <div className="mb-4">Jumlah Bayar</div>
           </CCol>
           <CCol xs={9}>
-            <CFormInput type="number" onChange={(event) => setJumlahBayar(event.target.value)} />
+            <CFormInput
+              type="number"
+              onChange={(event) => setJumlahBayar(event.target.value)}
+              invalid={jumlahBayar < keranjang.total}
+              feedbackInvalid="Uang bayar kurang "
+            />
           </CCol>
           <CCol xs={3}>Kembali</CCol>
           <CCol xs={9}>
@@ -69,16 +77,28 @@ export default function ProdukKeranjang() {
         <CButton
           color="primary"
           onClick={() => {
+            if (jumlahBayar < keranjang.total) {
+              return
+            }
+
             const request = {
               items: keranjang.keranjang.map((item) => ({
                 productId: item.menu.id,
                 count: item.jumlah,
               })),
             }
+
+            console.log(JSON.stringify(request))
+
+            const token = auth.token
+
             TransactionService()
-              .saveTransaction(request, 'aa')
+              .saveTransaction(request, token)
               .then((data) => {
                 console.log('success save transaction')
+                setModalVisible(false)
+                dispatch(cartCleanAction())
+                navigate('/#/produk')
               })
               .catch({})
           }}
@@ -172,6 +192,9 @@ export default function ProdukKeranjang() {
         </div>
         <CButton
           onClick={() => {
+            if (keranjang.total === 0) {
+              return
+            }
             setModalVisible(true)
           }}
         >

@@ -19,15 +19,16 @@ import currency from 'currency.js'
 
 export default function ProdukHome() {
   const [produk, setProduk] = React.useState([])
+  const auth = useSelector((state) => state.AuthReducers)
 
   React.useEffect(() => {
     MenuService()
-      .getMenu()
+      .getMenu(auth.token)
       .then((response) => {
         console.log(response.data)
         setProduk(response.data)
       })
-  }, [])
+  }, [auth.token])
 
   return (
     <>
@@ -50,8 +51,7 @@ export function ProdukItem(props) {
     <CToast title="CoreUI for React.js" color="primary" className="text-white align-items-center">
       <CToastBody>
         <div className="d-flex">
-          {produk.name} berhasil ditambahkan ke keranjang. Jumlah {produk.name} yang dibeli{' '}
-          {keranjang.find((value, index) => value.menu.id === produk.id).jumlah + 1}
+          {produk.name} berhasil ditambahkan ke keranjang
           <CToastClose white />
         </div>
       </CToastBody>
@@ -75,7 +75,7 @@ export function ProdukItem(props) {
           <CButton
             onClick={() => {
               dispatch(addKeranjangAction(props.produk))
-              // addToast(addToCartToast(props.produk))
+              addToast(addToCartToast(props.produk))
             }}
           >
             Tambah ke Keranjang

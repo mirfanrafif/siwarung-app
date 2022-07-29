@@ -6,10 +6,11 @@ export const TransactionService = () => {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
+        'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
     }).then((res) => {
-      if (res.status === 200) {
+      if (res.status < 400) {
         return res.json()
       } else {
         return Promise.reject(res.statusText)

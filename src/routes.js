@@ -54,9 +54,17 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const ProdukHome = React.lazy(() => import('./views/produk/home'))
 const ProdukKeranjang = React.lazy(() => import('./views/produk/keranjang'))
 
+//Admin manage Produk
+const OwnerProdukHome = React.lazy(() => import('./views/owner/produk/home'))
+const OwnerProdukAdd = React.lazy(() => import('./views/owner/produk/add'))
+const OwnerProdukEdit = React.lazy(() => import('./views/owner/produk/edit'))
+
+const OwnerProductCategoryHome = React.lazy(() => import('./views/owner/product_category/home'))
+const OwnerProductCategoryAdd = React.lazy(() => import('./views/owner/product_category/add'))
+const OwnerProductCategoryEdit = React.lazy(() => import('./views/owner/product_category/edit'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
@@ -116,8 +124,29 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
+  { path: '/owner/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/produk', name: 'Produk', element: ProdukHome },
   { path: '/cart', name: 'Keranjang', element: ProdukKeranjang },
+  //Produk
+  { path: '/owner/produk', name: 'Atur produk', element: OwnerProdukHome },
+  { path: '/owner/produk/add', name: 'Tambah produk', element: OwnerProdukAdd },
+  { path: '/owner/produk/:id', name: 'Ubah produk', element: OwnerProdukEdit },
+  //Produk
+  {
+    path: '/owner/product_category',
+    name: 'Atur kategori produk',
+    element: OwnerProductCategoryHome,
+  },
+  {
+    path: '/owner/product_category/add',
+    name: 'Tambah kategori produk',
+    element: OwnerProductCategoryAdd,
+  },
+  {
+    path: '/owner/product_category/:id',
+    name: 'Ubah kategori produk',
+    element: OwnerProductCategoryEdit,
+  },
 ]
 
 export default routes

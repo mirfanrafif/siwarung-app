@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT } from '../constants/AuthConstants'
+import { LOGIN, LOGOUT } from '../actionconstants'
 
 export const loginAction = (loginData) => {
   return {

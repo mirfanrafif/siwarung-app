@@ -1,14 +1,15 @@
-import { PayloadAction } from '@reduxjs/toolkit'
-import { LOGIN, LOGOUT } from '../constants/AuthConstants'
-import { AuthResponse } from '../../services/response/AuthResponse'
+import { LOGIN, LOGOUT } from '../actionconstants'
 
 export var authInitialState = {
-  access_token: '',
+  token: '',
   user: {
     id: 0,
-    email_verified_at: null,
+    name: '',
+    role: '',
+    username: '',
     created_at: Date.prototype,
     updated_at: Date.prototype,
+    deleted_at: null,
   },
 }
 
@@ -18,7 +19,7 @@ authInitialState = authData ? JSON.parse(authData) : authInitialState
 const AuthReducers = (state = authInitialState, action) => {
   switch (action.type) {
     case LOGIN:
-      const authData = action.payload
+      const authData = action.payload.data
       window.localStorage.setItem('authReducers', JSON.stringify(authData))
       return authData
     case LOGOUT:

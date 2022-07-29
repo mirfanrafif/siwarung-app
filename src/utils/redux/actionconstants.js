@@ -8,3 +8,6 @@ export const DELETE_CART = 'cart-delete'
 export const CLEAR_CART = 'cart-clear'
 
 export const SET_LOADING = 'SET_LOADING'
+
+export const LOGIN = 'login'
+export const LOGOUT = 'logout'

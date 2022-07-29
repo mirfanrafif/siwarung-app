@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
 import keranjangReducer, { keranjangInitialState } from './utils/redux/reducers/menureducers'
+import AuthReducers, { authInitialState } from './utils/redux/reducers/authreducers'
 
 const initialState = {
   sidebarShow: true,
@@ -19,10 +20,12 @@ export const AppStore = configureStore({
   reducer: combineReducers({
     changeState,
     keranjangReducer,
+    AuthReducers,
   }),
   preloadedState: {
     changeState: initialState,
     keranjangReducer: keranjangInitialState,
+    AuthReducers: authInitialState,
   },
   devTools: true,
 })

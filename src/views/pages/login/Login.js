@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -16,10 +16,15 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { AuthService } from 'src/utils/services/auth.service'
+import { useDispatch } from 'react-redux'
+import { loginAction } from 'src/utils/redux/actions/authactions'
 
 const Login = () => {
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -71,9 +76,12 @@ const Login = () => {
                             AuthService()
                               .login(request)
                               .then((response) => {
-                                console.log(response)
+                                dispatch(loginAction(response))
+                                navigate('/owner/dashboard')
                               })
-                              .catch(() => {})
+                              .catch((error) => {
+                                console.log(error)
+                              })
                           }}
                         >
                           Login
