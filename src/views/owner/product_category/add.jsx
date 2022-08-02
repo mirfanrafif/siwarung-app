@@ -1,22 +1,7 @@
-import {
-  CButton,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CForm,
-  CFormInput,
-  CFormLabel,
-  CRow,
-} from '@coreui/react'
+import { CButton, CCard, CCardBody, CForm, CFormInput } from '@coreui/react'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { MenuService } from 'src/utils/services/menu.service'
 import { ProductCategoryService } from 'src/utils/services/productcategory.service'
 
 export default function OwnerProductCategoryAdd() {

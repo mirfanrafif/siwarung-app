@@ -10,6 +10,7 @@ export var authInitialState = {
     created_at: Date.prototype,
     updated_at: Date.prototype,
     deleted_at: null,
+    warung: null,
   },
 }
 

@@ -22,16 +22,21 @@ import currency from 'currency.js'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import ReactToPrint from 'react-to-print'
 import { cartCleanAction, setKeranjangAction } from 'src/utils/redux/actions/menuactions'
 import { TransactionService } from 'src/utils/services/transactions.service'
+import StrukTransaksi from './struk'
 
 export default function ProdukKeranjang() {
   const keranjang = useSelector((state) => state.keranjangReducer)
   const auth = useSelector((state) => state.AuthReducers)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
+  const [successModalVisible, setSuccessModalVisible] = React.useState(false)
   const [jumlahBayar, setJumlahBayar] = React.useState(0)
   const navigate = useNavigate()
+
+  let componentRef = React.useRef()
 
   const renderModal = () => (
     <CModal visible={modalVisible} onClose={() => setModalVisible(false)} alignment="center">
@@ -58,7 +63,8 @@ export default function ProdukKeranjang() {
               type="number"
               onChange={(event) => setJumlahBayar(event.target.value)}
               invalid={jumlahBayar < keranjang.total}
-              feedbackInvalid="Uang bayar kurang "
+              feedbackInvalid="Uang bayar kurang"
+              value={jumlahBayar}
             />
           </CCol>
           <CCol xs={3}>Kembali</CCol>
@@ -97,8 +103,9 @@ export default function ProdukKeranjang() {
               .then((data) => {
                 console.log('success save transaction')
                 setModalVisible(false)
-                dispatch(cartCleanAction())
-                navigate('/produk')
+                setSuccessModalVisible(true)
+                // dispatch(cartCleanAction())
+                // navigate('/produk')
               })
               .catch({})
           }}
@@ -107,6 +114,75 @@ export default function ProdukKeranjang() {
         </CButton>
       </CModalFooter>
     </CModal>
+  )
+
+  const renderSuccessModal = () => (
+    <CModal visible={successModalVisible} onClose={() => setModalVisible(false)} alignment="center">
+      <CModalHeader onClose={() => setModalVisible(false)}>
+        <CModalTitle>Pembayaran</CModalTitle>
+      </CModalHeader>
+      <CModalBody>Berhasil melakukan transaksi</CModalBody>
+      <CModalFooter>
+        <ReactToPrint trigger={() => <CButton>Cetak Struk</CButton>} content={() => componentRef} />
+      </CModalFooter>
+    </CModal>
+  )
+
+  const componentToPrint = () => (
+    <div ref={(el) => (componentRef = el)}>
+      <div style={{ width: '400px', margin: '60px', fontFamily: 'serif' }}>
+        <div>
+          <div className="mb-4">
+            <h5>{auth.user.warung.name}</h5>
+            <h6>{auth.user.warung.address}</h6>
+          </div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Nama Produk</th>
+                <th>Harga</th>
+                <th>@</th>
+                <th>Jumlah</th>
+              </tr>
+            </thead>
+            <tbody>
+              {keranjang.keranjang.map((item) => (
+                <tr key={item.menu.id}>
+                  <td>{item.menu.name}</td>
+                  <td>
+                    {currency(item.menu.price, {
+                      symbol: 'Rp. ',
+                      separator: '.',
+                      precision: 0,
+                    }).format()}
+                  </td>
+                  <td>
+                    <div className="mr-2 ml-2">{item.jumlah}</div>
+                  </td>
+                  <td>
+                    {currency(item.jumlah * item.menu.price, {
+                      symbol: 'Rp. ',
+                      separator: '.',
+                      precision: 0,
+                    }).format()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-end mt-4">
+            <h6>
+              Total :{' '}
+              {currency(keranjang.total, {
+                symbol: 'Rp. ',
+                separator: '.',
+                precision: 0,
+              }).format()}
+            </h6>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 
   return (
@@ -149,7 +225,7 @@ export default function ProdukKeranjang() {
                     >
                       +
                     </CButton>
-                    <CFormInput value={item.jumlah} disabled />
+                    <div className="mr-2 ml-2">{item.jumlah}</div>
                     <CButton
                       variant="outline"
                       color="danger"
@@ -201,6 +277,12 @@ export default function ProdukKeranjang() {
           Bayar
         </CButton>
         {renderModal()}
+        {renderSuccessModal()}
+      </div>
+
+      <div>
+        <h5>Contoh struk: </h5>
+        <CCard>{componentToPrint()}</CCard>
       </div>
     </>
   )

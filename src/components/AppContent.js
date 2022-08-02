@@ -4,9 +4,14 @@ import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
+import { useSelector } from 'react-redux'
 
 const AppContent = () => {
-  return (
+  const auth = useSelector((state) => state.AuthReducers)
+
+  return auth.token.length === 0 ? (
+    <Navigate to={'/login'} />
+  ) : (
     <CContainer lg>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>

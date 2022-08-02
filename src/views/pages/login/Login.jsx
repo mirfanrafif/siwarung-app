@@ -18,6 +18,8 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { AuthService } from 'src/utils/services/auth.service'
 import { useDispatch } from 'react-redux'
 import { loginAction } from 'src/utils/redux/actions/authactions'
+import swal from 'sweetalert2'
+import { MySwal } from 'src/App'
 
 const Login = () => {
   const [username, setUsername] = React.useState('')
@@ -76,11 +78,12 @@ const Login = () => {
                             AuthService()
                               .login(request)
                               .then((response) => {
-                                dispatch(loginAction(response))
+                                dispatch(loginAction(response.data))
                                 navigate('/owner/dashboard')
                               })
-                              .catch((error) => {
-                                console.log(error)
+                              .catch(async (error) => {
+                                var body = error.response.data
+                                MySwal.fire('Gagal login', body.message, 'error')
                               })
                           }}
                         >

@@ -1,12 +1,17 @@
 import React, { Component, Suspense } from 'react'
 import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
+import swal from 'sweetalert2'
+
+import withReactContent from 'sweetalert2-react-content'
 
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
   </div>
 )
+
+export const MySwal = withReactContent(swal)
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
