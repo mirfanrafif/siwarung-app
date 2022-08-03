@@ -280,7 +280,7 @@ export default function ProdukKeranjang() {
         {renderSuccessModal()}
       </div>
 
-      <div>
+      <div style={{ display: 'none' }}>
         <h5>Contoh struk: </h5>
         <CCard>{componentToPrint()}</CCard>
       </div>
