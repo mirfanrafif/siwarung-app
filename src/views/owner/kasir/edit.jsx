@@ -44,10 +44,10 @@ export default function OwnerProductCategoryEdit() {
   const renderModal = () => (
     <CModal visible={modalVisible} onClose={() => setModalVisible(false)} alignment="center">
       <CModalHeader onClose={() => setModalVisible(false)}>
-        <CModalTitle>Hapus menu</CModalTitle>
+        <CModalTitle>Hapus kasir</CModalTitle>
       </CModalHeader>
       <CModalBody>
-        <p>Apakah kamu yakin ingin menghapus data menu {name}?</p>
+        <p>Apakah kamu yakin ingin menghapus data kasir {name}?</p>
       </CModalBody>
       <CModalFooter>
         <CButton
@@ -89,14 +89,9 @@ export default function OwnerProductCategoryEdit() {
       return
     }
 
-    if (password.length === 0) {
-      return
-    }
-
     const request = {
       name: name,
       username: username,
-      password: password,
       role: role,
     }
 

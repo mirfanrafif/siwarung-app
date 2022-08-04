@@ -12,6 +12,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { MenuService } from 'src/utils/services/menu.service'
+import currency from 'currency.js'
 
 export default function OwnerProdukHome() {
   const [produk, setProduk] = React.useState([])
@@ -53,7 +54,13 @@ export default function OwnerProdukHome() {
               >
                 <CTableDataCell>{item.id}</CTableDataCell>
                 <CTableDataCell>{item.name}</CTableDataCell>
-                <CTableDataCell>{item.price}</CTableDataCell>
+                <CTableDataCell>
+                  {currency(item.price, {
+                    symbol: 'Rp ',
+                    separator: '.',
+                    precision: 0,
+                  }).format()}
+                </CTableDataCell>
                 <CTableDataCell>{item.category.name}</CTableDataCell>
               </CTableRow>
             ))}
