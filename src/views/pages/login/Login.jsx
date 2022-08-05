@@ -79,7 +79,7 @@ const Login = () => {
                               .login(request)
                               .then((response) => {
                                 dispatch(loginAction(response.data))
-                                navigate('/owner/dashboard')
+                                navigate('/produk')
                               })
                               .catch(async (error) => {
                                 var body = error.response.data
