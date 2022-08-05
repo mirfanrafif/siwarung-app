@@ -107,13 +107,13 @@ export default function ProdukKeranjang() {
 
             TransactionService()
               .saveTransaction(request, token)
-              .then((data) => {
+              .then((response) => {
                 console.log('success save transaction')
                 setModalVisible(false)
                 setSuccessModalVisible(true)
-                setTransaksi(data)
-                console.log(data)
-                // dispatch(cartCleanAction())
+                setTransaksi(response.data)
+                console.log(response.data)
+                dispatch(cartCleanAction())
                 // navigate('/produk')
               })
               .catch({})
@@ -139,58 +139,62 @@ export default function ProdukKeranjang() {
 
   const componentToPrint = () => (
     <div ref={(el) => (componentRef = el)}>
-      <div style={{ margin: '60px' }}>
-        <div>
-          <div style={{ marginBottom: '60px' }}>
-            <h5>{auth.user.warung.name}</h5>
-            <h6>{auth.user.warung.address}</h6>
-          </div>
-          <table className="table table-borderless">
-            <thead>
-              <tr>
-                <th>Nama Produk</th>
-                <th>Harga</th>
-                <th>@</th>
-                <th>Jumlah</th>
-              </tr>
-            </thead>
-            <tbody>
-              {keranjang.keranjang.map((item) => (
-                <tr key={item.menu.id}>
-                  <td>{item.menu.name}</td>
-                  <td>
-                    {currency(item.menu.price, {
-                      symbol: 'Rp. ',
-                      separator: '.',
-                      precision: 0,
-                    }).format()}
-                  </td>
-                  <td>
-                    <div className="mr-2 ml-2">{item.jumlah}</div>
-                  </td>
-                  <td>
-                    {currency(item.jumlah * item.menu.price, {
-                      symbol: 'Rp. ',
-                      separator: '.',
-                      precision: 0,
-                    }).format()}
-                  </td>
+      {transaksi.message === undefined ? (
+        <></>
+      ) : (
+        <div style={{ margin: '60px' }}>
+          <div>
+            <div style={{ marginBottom: '60px' }}>
+              <h5>{auth.user.warung.name}</h5>
+              <h6>{auth.user.warung.address}</h6>
+            </div>
+            <table className="table table-borderless" style={{ marginBottom: '60px' }}>
+              <thead>
+                <tr>
+                  <th>Nama Produk</th>
+                  <th>Harga</th>
+                  <th>@</th>
+                  <th>Jumlah</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="d-flex justify-content-end mt-4">
-            <h6>
-              Total :{' '}
-              {currency(keranjang.total, {
-                symbol: 'Rp. ',
-                separator: '.',
-                precision: 0,
-              }).format()}
-            </h6>
+              </thead>
+              <tbody>
+                {transaksi.data.details.map((item) => {
+                  return (
+                    <tr key={item.product.id}>
+                      <td>{item.product.name}</td>
+                      <td>
+                        {currency(item.product.price, {
+                          symbol: 'Rp. ',
+                          separator: '.',
+                          precision: 0,
+                        }).format()}
+                      </td>
+                      <td>{item.count}</td>
+                      <td>
+                        {currency(item.count * item.product.price, {
+                          symbol: 'Rp. ',
+                          separator: '.',
+                          precision: 0,
+                        }).format()}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+            <div className="d-flex justify-content-end">
+              <h6>
+                Total :{' '}
+                {currency(transaksi.data.total, {
+                  symbol: 'Rp. ',
+                  separator: '.',
+                  precision: 0,
+                }).format()}
+              </h6>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 

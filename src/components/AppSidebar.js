@@ -19,6 +19,7 @@ const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.changeState.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.changeState.sidebarShow)
+  const warung = useSelector((state) => state.AuthReducers.user.warung)
 
   return (
     <CSidebar
@@ -29,9 +30,9 @@ const AppSidebar = () => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
     >
-      <CSidebarBrand className="d-none d-md-flex" to="/">
-        <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} />
-        <CIcon className="sidebar-brand-narrow" icon={sygnet} height={35} />
+      <CSidebarBrand className="d-none d-md-flex flex-column text-center p-md-2" to="/">
+        <h5>{warung.name}</h5>
+        <p>{warung.address}</p>
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
