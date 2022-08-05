@@ -25,7 +25,6 @@ import { useNavigate } from 'react-router-dom'
 import ReactToPrint from 'react-to-print'
 import { cartCleanAction, setKeranjangAction } from 'src/utils/redux/actions/menuactions'
 import { TransactionService } from 'src/utils/services/transactions.service'
-import StrukTransaksi from './struk'
 
 export default function ProdukKeranjang() {
   const keranjang = useSelector((state) => state.keranjangReducer)
@@ -34,6 +33,7 @@ export default function ProdukKeranjang() {
   const [modalVisible, setModalVisible] = React.useState(false)
   const [successModalVisible, setSuccessModalVisible] = React.useState(false)
   const [jumlahBayar, setJumlahBayar] = React.useState(0)
+  const [transaksi, setTransaksi] = React.useState({})
   const navigate = useNavigate()
 
   let componentRef = React.useRef()
@@ -48,11 +48,18 @@ export default function ProdukKeranjang() {
           <CCol xs={3}>Total</CCol>
           <CCol xs={9}>
             <div className="mb-4">
-              {currency(keranjang.total, {
-                symbol: 'Rp. ',
-                separator: '.',
-                precision: 0,
-              }).format()}
+              {currency(
+                keranjang.keranjang.length > 0
+                  ? keranjang.keranjang
+                      .map((item) => item.jumlah * item.menu.price)
+                      .reduce((prev, cur, index) => prev + cur)
+                  : 0,
+                {
+                  symbol: 'Rp. ',
+                  separator: '.',
+                  precision: 0,
+                },
+              ).format()}
             </div>
           </CCol>
           <CCol xs={3}>
@@ -104,6 +111,8 @@ export default function ProdukKeranjang() {
                 console.log('success save transaction')
                 setModalVisible(false)
                 setSuccessModalVisible(true)
+                setTransaksi(data)
+                console.log(data)
                 // dispatch(cartCleanAction())
                 // navigate('/produk')
               })
@@ -130,13 +139,13 @@ export default function ProdukKeranjang() {
 
   const componentToPrint = () => (
     <div ref={(el) => (componentRef = el)}>
-      <div style={{ width: '400px', margin: '60px', fontFamily: 'serif' }}>
+      <div style={{ margin: '60px' }}>
         <div>
-          <div className="mb-4">
+          <div style={{ marginBottom: '60px' }}>
             <h5>{auth.user.warung.name}</h5>
             <h6>{auth.user.warung.address}</h6>
           </div>
-          <table className="table">
+          <table className="table table-borderless">
             <thead>
               <tr>
                 <th>Nama Produk</th>
