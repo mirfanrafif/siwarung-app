@@ -142,7 +142,7 @@ export default function ProdukKeranjang() {
       {transaksi.message === undefined ? (
         <></>
       ) : (
-        <div style={{ margin: '60px' }}>
+        <div style={{ marginTop: '60px', marginBottom: '60px' }}>
           <div>
             <div style={{ marginBottom: '60px' }}>
               <h5>{auth.user.warung.name}</h5>
